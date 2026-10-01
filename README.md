@@ -1,131 +1,62 @@
-# Linux Systems & Terminal Power User Toolkit
+# Linux Workstation Setup & Dotfiles
 
-A curated collection of shell scripts, system administration workflows, and terminal configurations designed for performance monitoring, automation, and daily Linux operations.
-
----
+Automated setup scripts, package lists, and configuration files (dotfiles) for deploying a clean, reproducible Linux workstation environment.
 
 ## Overview
 
-This repository serves as a practical handbook and collection of tools for managing Linux environments efficiently. Whether managing remote Linux servers, configuring workstations, or optimizing daily terminal workflows, this collection provides tested configurations and automation scripts.
-
----
+This repository contains terminal configurations, shell aliases, application settings, and deployment scripts to quickly bootstrap a fresh Linux installation. It is designed to streamline system setup, enforce consistent environment settings, and minimize manual configuration.
 
 ## Repository Structure
 
-```text
+```
 .
-├── scripts/
-│   ├── system_health.sh        # Resource monitoring script (CPU, RAM, Disk, GPU)
-│   ├── network_diag.sh         # Network connectivity and socket status checker
-│   └── backup_rsync.sh         # Incremental rsync backup utility
+├── bootstrap.sh              # Main installation and symlink script
 ├── config/
-│   ├── .bashrc_aliases         # Production-ready shell aliases
-│   └── tmux.conf               # Custom tmux terminal multiplexer layout
+│   ├── .bashrc               # Main Bash shell configuration
+│   ├── .bashrc_aliases       # Command shortcuts and custom aliases
+│   ├── .gitconfig            # Git user config and global settings
+│   └── .tmux.conf            # Terminal multiplexer settings
+├── scripts/
+│   ├── install_packages.sh   # System dependencies and APT/Flatpak installer
+│   └── setup_desktop.sh      # UI layout, fonts, and theme customization
 └── docs/
-    ├── networking_cheatsheet.md # Essential IP, port, and SSH routing commands
-    └── storage_management.md   # Guide to storage quotas, mounting, and permissions
+    └── post_install.md       # Post-installation checklist and manual steps
 ```
 
----
+## Quick Start & Installation
 
-## Quick Start: Core Workflows
+### Clone the Repository
 
-### Installation & Setup
-
-Clone the repository to your local environment:
+Clone the repository to your home directory:
 
 ```bash
-git clone https://github.com/Duncan1738/linux-power-user-toolkit.git
-cd linux-power-user-toolkit
-chmod +x scripts/*.sh
+git clone https://github.com/Duncan1738/Linux-Workstation-Setup-Dotfiles.git ~/dotfiles
+cd ~/dotfiles
 ```
 
----
+### Run Bootstrapper
 
-### 1. System Diagnostics & Monitoring
-
-Check active hardware load, memory consumption, and disk usage in real time:
+Grant execution permissions and execute the bootstrap script to create configuration symlinks and install base dependencies:
 
 ```bash
-# Monitor system resources
-top -b -n 1 | head -n 20
-
-# View disk usage in human-readable format
-df -h --total
-
-# Inspect running processes filtered by memory usage
-ps aux --sort=-%mem | head -n 10
+chmod +x bootstrap.sh scripts/*.sh
+./bootstrap.sh
 ```
 
----
+## Included Configurations
 
-### 2. File & Directory Management
+### Shell & Environment
+- Custom prompt configuration with Git status integration
+- Essential safety aliases (`rm -i`, `cp -i`, `mv -i`)
+- Navigation shortcuts and directory color settings
 
-Efficiently locate large files and update directory permissions:
-
-```bash
-# Find files larger than 100MB in the current directory
-find . -type f -size +100M -exec ls -lh {} \;
-
-# Recursively grant read/write permissions to owner and read-only to group
-chmod -R 750 /path/to/target_directory
-```
-
----
-
-### 3. Remote Server Management (SSH)
-
-Establish secure sessions, port forwarding, and background multiplexing:
-
-```bash
-# Connect with persistent SSH keys and compression enabled
-ssh -C -i ~/.ssh/id_ed25519 user@remote-hostname
-
-# Port forward a local web app interface to a remote server
-ssh -L 8080:localhost:8080 user@remote-hostname
-
-# Start a detached tmux session to keep background jobs running after disconnection
-tmux new -s workflow_session
-```
-
----
-
-## Essential Shell Aliases
-
-Add these productivity shortcuts to your `~/.bashrc` or `~/.zshrc` file:
-
-```bash
-# Safety guards against accidental overwrites
-alias rm='rm -i'
-alias cp='cp -i'
-alias mv='mv -i'
-
-# Enhanced list viewing
-alias ll='ls -lh --group-directories-first'
-alias la='ls -lah --group-directories-first'
-
-# Quick networking checks
-alias myip='curl -s https://ifconfig.me'
-alias ports='netstat -tulpn'
-```
-
----
-
-## Recommended CLI Tools
-
-Enhance your default command-line interface with these modern tools:
-
-| Category | Standard Tool | Modern Alternative | Purpose |
-| :--- | :--- | :--- | :--- |
-| **System Monitor** | `top` | `htop` / `btop` | Interactive process viewer and resource usage chart |
-| **File Search** | `find` | `fd` | Fast, user-friendly directory search |
-| **Text Search** | `grep` | `ripgrep` (`rg`) | Blazing fast recursive line searches |
-| **File Viewer** | `cat` | `bat` | File viewer with syntax highlighting and Git integration |
-
----
+### Developer Tooling
+- Global Git settings pre-configured for development
+- Multiplexer layout for `tmux` with custom pane management
+- Quick-install package lists for common development tools (`curl`, `git`, `htop`, `ripgrep`, `build-essential`)
 
 ## Author & License
 
 Maintained by **Duncan1738**.
 
-This project is open-source under the [MIT License](LICENSE). Feel free to adapt and share.
+This project is open-source under the [MIT License](LICENSE).
